@@ -29,6 +29,8 @@ export default function Phonebooks() {
                             name={contact.name}
                             phone={contact.phone}
                             avatar={contact.avatar}
+                            data={data}
+                            setData={setData}
                         />
                     ))}
                 </ul>

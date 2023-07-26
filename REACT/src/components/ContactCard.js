@@ -1,11 +1,51 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export default function ContactCard({ id, name, phone, avatar }) {
+export default function ContactCard({ id, name, phone, avatar, data, setData }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState(name);
     const [editedPhone, setEditedPhone] = useState(phone);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+    const updateAvatar = (contactId, newAvatar) => {
+        // Make a copy of the data array to modify it
+        const updatedData = data.map((contact) => {
+            if (contact.id === contactId) {
+                return {
+                    ...contact,
+                    avatar: newAvatar,
+                };
+            }
+            return contact;
+        });
+
+        // Update the data state with the new avatar
+        setData(updatedData);
+    };
+
+    const handleImageClick = () => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            const formData = new FormData();
+            formData.append("avatar", file);
+
+            axios
+                .put(`http://localhost:3001/api/phonebooks/${id}/avatar`, formData)
+                .then((response) => {
+                    // Call the function to update the editedAvatar state and the data array
+                    updateAvatar(id, response.data.data.avatar);
+                })
+                .catch((error) => {
+                    console.error("Error updating avatar:", error);
+                    // Handle the error, show an error message, or implement proper error handling
+                });
+            window.location.reload()
+        });
+        fileInput.click();
+    };
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -40,7 +80,7 @@ export default function ContactCard({ id, name, phone, avatar }) {
             .delete(`http://localhost:3001/api/phonebooks/${id}`)
             .then((response) => {
                 // Handle successful delete, you may update the state here if required
-                console.log(`Contact with id ${id} deleted successfully.`);
+                // console.log(`Contact with id ${id} deleted successfully.`);
                 window.location.reload(); // Refresh the page after successful delete
             })
             .catch((error) => {
@@ -60,7 +100,9 @@ export default function ContactCard({ id, name, phone, avatar }) {
                     src={avatar ? `http://localhost:3001/images/${avatar}` : '/user.png'}
                     className="img-fluid"
                     width="90px"
+                    height="90px"
                     alt="User"
+                    onClick={handleImageClick}
                 />
             </div>
             <div className="info">
