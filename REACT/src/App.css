@@ -96,7 +96,7 @@ main {
   border: 1px solid #000000;
   border-radius: 5px;
   padding: 10px;
-  width: 250px;
+  width: auto;
   margin: 0 auto; /* This will center the card within its parent container */
   margin-bottom: 15px;
   background-color: rgb(213, 212, 212);
@@ -111,14 +111,21 @@ main {
   padding: 10px;
 }
 
+.info span{
+  float: left;
+  padding-left: 10px;
+}
+
+
 ul {
   display: flex;
   list-style: none;
   padding-left: 5px;
+  padding-right: 7px;
 }
 
 .btn-pd {
-  margin-top: 10px;
+  margin-top: -5px;
   float: left;
   padding-left: 10px;
 }
@@ -126,11 +133,6 @@ ul {
 .btn {
   border: none;
   background-color: rgb(213, 212, 212);
-}
-
-.info span{
-  float: left;
-  padding-left: 10px;
 }
 
 .phone {
@@ -171,7 +173,6 @@ ul {
   li {
       flex-basis: auto;
       width: 100%;
-
   }
 
   .card{
