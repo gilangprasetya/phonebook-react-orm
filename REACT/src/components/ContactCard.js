@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 export default function ContactCard({ id, name, phone, avatar }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState(name);
     const [editedPhone, setEditedPhone] = useState(phone);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -28,6 +29,28 @@ export default function ContactCard({ id, name, phone, avatar }) {
             console.error('Error updating contact:', error);
             // Handle the error, show an error message, or implement proper error handling
         }
+    };
+
+    const handleDelete = () => {
+        setShowConfirmModal(true);
+    };
+
+    const handleConfirmDelete = () => {
+        axios
+            .delete(`http://localhost:3001/api/phonebooks/${id}`)
+            .then((response) => {
+                // Handle successful delete, you may update the state here if required
+                console.log(`Contact with id ${id} deleted successfully.`);
+                window.location.reload(); // Refresh the page after successful delete
+            })
+            .catch((error) => {
+                // Handle error if delete fails
+                console.error("Error deleting contact:", error);
+            });
+    };
+
+    const handleCancelDelete = () => {
+        setShowConfirmModal(false);
     };
 
     return (
@@ -70,18 +93,50 @@ export default function ContactCard({ id, name, phone, avatar }) {
                 <div className="btn-pd">
                     {isEditing ? (
                         <>
-                            <button type="submit" className="btn" onClick={handleSaveClick}>
+                            <button
+                                type="submit"
+                                className="btn"
+                                onClick={handleSaveClick}
+                                onMouseOver={(e) => (e.target.style.cursor = 'pointer')}
+                                onMouseOut={(e) => (e.target.style.cursor = 'auto')}
+                            >
                                 <i className="fa-solid fa-floppy-disk"></i>
                             </button>
                         </>
                     ) : (
                         <>
-                            <button className="btn" onClick={handleEditClick}>
+                            <button
+                                className="btn"
+                                onClick={handleEditClick}
+                                onMouseOver={(e) => (e.target.style.cursor = 'pointer')}
+                                onMouseOut={(e) => (e.target.style.cursor = 'auto')}
+                            >
                                 <i className="fa-solid fa-pen-to-square"></i>
                             </button>
-                            <button className="btn">
+                            <button
+                                onClick={handleDelete}
+                                className="btn"
+                                onMouseOver={(e) => (e.target.style.cursor = 'pointer')}
+                                onMouseOut={(e) => (e.target.style.cursor = 'auto')}
+                            >
                                 <i className="fa-solid fa-trash-can"></i>
                             </button>
+
+                            {showConfirmModal && (
+                                <div className="confirm-modal">
+                                    <div className="modal-content">
+                                        <p>Are you sure you want to delete this contact?</p>
+                                        <div className="modal-buttons">
+                                            <button onClick={handleConfirmDelete} className="confirm-button">
+                                                Yes, Delete
+                                            </button>
+                                            <button onClick={handleCancelDelete} className="cancel-button">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>
