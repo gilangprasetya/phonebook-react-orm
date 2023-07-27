@@ -10,7 +10,9 @@ export default function Header({ handleAddContact, sortOrder, setSortOrder, hand
 
     useEffect(() => {
         // Call the handleSearch function whenever searchKeyword changes
-        handleSearch(searchKeyword);
+        if (searchKeyword !== "") {
+            handleSearch(searchKeyword);
+        }
     }, [searchKeyword, handleSearch]);
 
     const handleAddButtonClick = () => {
@@ -37,13 +39,6 @@ export default function Header({ handleAddContact, sortOrder, setSortOrder, hand
         setSortOrder(newSortOrder);
     };
 
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-        // Call the handleSearch function and pass the searchKeyword as an argument
-        handleSearch(searchKeyword);
-    };
-
-
     return (
         <div className="top-bar">
             <div className="item">
@@ -60,7 +55,7 @@ export default function Header({ handleAddContact, sortOrder, setSortOrder, hand
                 </button>
             </div>
             <div className="item search-form">
-                <form onSubmit={handleSearchSubmit}>
+                <form>
                     <i className="fas fa-solid fa-magnifying-glass"></i>
                     <input
                         type="text"

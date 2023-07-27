@@ -11,7 +11,7 @@ router.get('/phonebooks', async function (req, res, next) {
         sortby = sortby || 'name'; // Default untuk sort by name (ganti dengan kolom yang sesuai di dalam model)
         sort = sort || 'asc'; // Default untuk sort mode adalah 'asc' (ascending)
         page = parseInt(page) || 1; // Default halaman pertama
-        limit = parseInt(limit) || 10; // Default batas item per halaman adalah 10
+        limit = parseInt(limit) || 13; // Default batas item per halaman adalah 10
 
         // Menerapkan filter berdasarkan keyword jika diberikan dalam query string
         const searchParams = {};
