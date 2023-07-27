@@ -7,13 +7,24 @@ export default function Phonebooks() {
 
     const [data, setData] = useState([]);
 
-    useEffect(() => {
-        axios.get('http://localhost:3001/api/phonebooks').then((response) => {
+    const [sortOrder, setSortOrder] = useState("asc");
+
+    const fetchData = async (sortOrder) => { // Receive sortOrder as an argument
+        try {
+            const response = await axios.get("http://localhost:3001/api/phonebooks", {
+                params: { sort: sortOrder },
+            });
             if (response.data.phonebooks) {
                 setData(response.data.phonebooks);
             }
-        });
-    }, []);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData(sortOrder);
+    }, [sortOrder]);
 
     const handleAddContact = async (name, phone) => {
         try {
@@ -35,11 +46,9 @@ export default function Phonebooks() {
 
     return (
         <div className="container">
+            {/* Pass the handleAddContact function as a prop */}
             <header>
-                <header>
-                    {/* Pass the handleAddContact function as a prop */}
-                    <Header handleAddContact={handleAddContact} />
-                </header>
+                <Header handleAddContact={handleAddContact} sortOrder={sortOrder} setSortOrder={setSortOrder} />
             </header>
             <main className="mt-3">
                 <ul>

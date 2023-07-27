@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUpZA, faArrowDownZA } from "@fortawesome/free-solid-svg-icons";
 
-export default function Header({ handleAddContact }) {
+export default function Header({ handleAddContact, sortOrder, setSortOrder }) {
     const [showPopup, setShowPopup] = useState(false);
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
+
 
     const handleAddButtonClick = () => {
         setShowPopup(true);
@@ -24,11 +27,25 @@ export default function Header({ handleAddContact }) {
         setPhone("");
     };
 
+    const handleSortClick = () => {
+        const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+        setSortOrder(newSortOrder);
+    };
+
+
     return (
         <div className="top-bar">
             <div className="item">
-                <button className="filter">
-                    <i className="fa-solid fa-arrow-up-z-a"></i>
+                <button
+                    className="filter"
+                    onClick={handleSortClick}
+                    onMouseOver={(e) => (e.target.style.cursor = 'pointer')}
+                    onMouseOut={(e) => (e.target.style.cursor = 'auto')}>
+                    {sortOrder === "asc" ? (
+                        <FontAwesomeIcon icon={faArrowUpZA} />
+                    ) : (
+                        <FontAwesomeIcon icon={faArrowDownZA} />
+                    )}
                 </button>
             </div>
             <div className="item search-form">
