@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Header from "./Header";
 import ContactCard from "./ContactCard";
 import axios from "axios";
@@ -16,7 +16,15 @@ export default function Phonebooks() {
                 params: { sort: sortOrder, page },
             });
             if (response.data.phonebooks) {
-                setData((prevData) => [...prevData, ...response.data.phonebooks]);
+                // Check if it's the first page (page === 1)
+                // If yes, set the data directly from the response
+                // If not, append the new data only if it's not already present in the state
+                setData((prevData) => {
+                    if (page === 1) return response.data.phonebooks;
+                    return [...prevData, ...response.data.phonebooks.filter((contact) => {
+                        return !prevData.some((existingContact) => existingContact.id === contact.id);
+                    })];
+                });
                 totalPagesRef.current = response.data.pages;
                 isLoadingRef.current = false;
             }
@@ -62,7 +70,7 @@ export default function Phonebooks() {
         }
     };
 
-    const handleScroll = () => {
+    const handleScroll = useCallback(() => {
         if (
             window.innerHeight + window.scrollY >=
             document.documentElement.scrollHeight - 200
@@ -73,18 +81,17 @@ export default function Phonebooks() {
                 setCurrentPage((prevPage) => prevPage + 1);
             }
         }
-    };
+    }, [currentPage, totalPagesRef, isLoadingRef, setCurrentPage]);
 
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, []);
+    }, [handleScroll]);
 
     return (
         <div className="container">
-            {/* Pass the handleAddContact function as a prop */}
             <header>
                 <Header
                     handleAddContact={handleAddContact}
@@ -107,7 +114,7 @@ export default function Phonebooks() {
                         />
                     ))}
                 </ul>
-                <div style={{ height: "250px" }}></div>
+                <div style={{ height: "350px" }}></div>
             </main>
         </div>
     );
