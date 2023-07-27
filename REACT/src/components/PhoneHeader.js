@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpZA, faArrowDownZA } from "@fortawesome/free-solid-svg-icons";
 
-export default function Header({ handleAddContact, sortOrder, setSortOrder, handleSearch }) {
+export default function PhoneHeader({ handleAddContact, sortOrder, setSortOrder, handleSearch }) {
     const [showPopup, setShowPopup] = useState(false);
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");

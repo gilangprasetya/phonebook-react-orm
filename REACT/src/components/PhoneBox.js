@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import Header from "./Header";
-import ContactCard from "./ContactCard";
+import PhoneHeader from "./PhoneHeader";
+import PhoneList from "./PhoneList";
 import axios from "axios";
 
-export default function Phonebooks() {
+export default function PhoneBox() {
     const [data, setData] = useState([]);
     const [sortOrder, setSortOrder] = useState("asc");
     const [currentPage, setCurrentPage] = useState(1);
@@ -87,7 +87,7 @@ export default function Phonebooks() {
     return (
         <div className="container">
             <header>
-                <Header
+                <PhoneHeader
                     handleAddContact={handleAddContact}
                     sortOrder={sortOrder}
                     setSortOrder={setSortOrder}
@@ -97,7 +97,7 @@ export default function Phonebooks() {
             <main className="mt-3">
                 <ul>
                     {data.map((contact) => (
-                        <ContactCard
+                        <PhoneList
                             key={contact.id}
                             id={contact.id}
                             name={contact.name}

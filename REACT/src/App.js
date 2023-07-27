@@ -1,11 +1,11 @@
 import './App.css';
-import Phonebooks from './components/Phonebooks';
 import '@fortawesome/fontawesome-free/css/all.css'
+import PhoneBox from './components/PhoneBox';
 
 function App() {
   return (
     <div className="App">
-      <Phonebooks />
+      <PhoneBox />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function ContactCard({ id, name, phone, avatar, data, setData }) {
+export default function PhoneList({ id, name, phone, avatar, data, setData }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedName, setEditedName] = useState(name);
     const [editedPhone, setEditedPhone] = useState(phone);
