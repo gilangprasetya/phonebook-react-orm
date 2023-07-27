@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpZA, faArrowDownZA } from "@fortawesome/free-solid-svg-icons";
 
-export default function Header({ handleAddContact, sortOrder, setSortOrder }) {
+export default function Header({ handleAddContact, sortOrder, setSortOrder, handleSearch }) {
     const [showPopup, setShowPopup] = useState(false);
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
+    const [searchKeyword, setSearchKeyword] = useState(""); // New state variable for search keyword
 
+    useEffect(() => {
+        // Call the handleSearch function whenever searchKeyword changes
+        handleSearch(searchKeyword);
+    }, [searchKeyword, handleSearch]);
 
     const handleAddButtonClick = () => {
         setShowPopup(true);
@@ -32,6 +37,12 @@ export default function Header({ handleAddContact, sortOrder, setSortOrder }) {
         setSortOrder(newSortOrder);
     };
 
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        // Call the handleSearch function and pass the searchKeyword as an argument
+        handleSearch(searchKeyword);
+    };
+
 
     return (
         <div className="top-bar">
@@ -49,8 +60,16 @@ export default function Header({ handleAddContact, sortOrder, setSortOrder }) {
                 </button>
             </div>
             <div className="item search-form">
-                <i className="fas fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search" className="search" />
+                <form onSubmit={handleSearchSubmit}>
+                    <i className="fas fa-solid fa-magnifying-glass"></i>
+                    <input
+                        type="text"
+                        id="search"
+                        className="search"
+                        value={searchKeyword}
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                    />
+                </form>
             </div>
             <div className="item">
                 <button

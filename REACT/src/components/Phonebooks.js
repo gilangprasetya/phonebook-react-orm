@@ -44,11 +44,31 @@ export default function Phonebooks() {
         }
     };
 
+    const handleSearch = async (keyword) => {
+        try {
+            // Fetch data from the server based on the search keyword and current sortOrder
+            const response = await axios.get("http://localhost:3001/api/phonebooks", {
+                params: { sort: sortOrder, keyword: keyword },
+            });
+
+            if (response.data.phonebooks) {
+                setData(response.data.phonebooks);
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
     return (
         <div className="container">
             {/* Pass the handleAddContact function as a prop */}
             <header>
-                <Header handleAddContact={handleAddContact} sortOrder={sortOrder} setSortOrder={setSortOrder} />
+                <Header
+                    handleAddContact={handleAddContact}
+                    sortOrder={sortOrder}
+                    setSortOrder={setSortOrder}
+                    handleSearch={handleSearch}
+                />
             </header>
             <main className="mt-3">
                 <ul>
