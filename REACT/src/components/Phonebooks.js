@@ -9,11 +9,12 @@ export default function Phonebooks() {
     const [currentPage, setCurrentPage] = useState(1);
     const totalPagesRef = useRef(1);
     const isLoadingRef = useRef(false);
+    const [searchKeyword, setSearchKeyword] = useState("");
 
-    const fetchData = async (page, sortOrder) => {
+    const fetchData = async (page, sortOrder, keyword = "") => {
         try {
             const response = await axios.get("http://localhost:3001/api/phonebooks", {
-                params: { sort: sortOrder, page },
+                params: { sort: sortOrder, page, keyword },
             });
             if (response.data.phonebooks) {
                 // Check if it's the first page (page === 1)
@@ -21,9 +22,12 @@ export default function Phonebooks() {
                 // If not, append the new data only if it's not already present in the state
                 setData((prevData) => {
                     if (page === 1) return response.data.phonebooks;
-                    return [...prevData, ...response.data.phonebooks.filter((contact) => {
-                        return !prevData.some((existingContact) => existingContact.id === contact.id);
-                    })];
+                    return [
+                        ...prevData,
+                        ...response.data.phonebooks.filter((contact) => {
+                            return !prevData.some((existingContact) => existingContact.id === contact.id);
+                        }),
+                    ];
                 });
                 totalPagesRef.current = response.data.pages;
                 isLoadingRef.current = false;
@@ -34,8 +38,8 @@ export default function Phonebooks() {
     };
 
     useEffect(() => {
-        fetchData(currentPage, sortOrder);
-    }, [currentPage, sortOrder]);
+        fetchData(currentPage, sortOrder, searchKeyword);
+    }, [currentPage, sortOrder, searchKeyword]);
 
     const handleAddContact = async (name, phone) => {
         try {
@@ -55,19 +59,9 @@ export default function Phonebooks() {
         }
     };
 
-    const handleSearch = async (keyword) => {
-        try {
-            // Fetch data from the server based on the search keyword and current sortOrder
-            const response = await axios.get("http://localhost:3001/api/phonebooks", {
-                params: { sort: sortOrder, keyword: keyword },
-            });
-
-            if (response.data.phonebooks) {
-                setData(response.data.phonebooks);
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+    const handleSearch = (keyword) => {
+        setSearchKeyword(keyword); // Update the searchKeyword state
+        setCurrentPage(1); // Reset the current page to 1 to start from the beginning when searching
     };
 
     const handleScroll = useCallback(() => {

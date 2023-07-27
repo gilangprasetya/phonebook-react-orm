@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpZA, faArrowDownZA } from "@fortawesome/free-solid-svg-icons";
 
@@ -7,13 +7,6 @@ export default function Header({ handleAddContact, sortOrder, setSortOrder, hand
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [searchKeyword, setSearchKeyword] = useState(""); // New state variable for search keyword
-
-    useEffect(() => {
-        // Call the handleSearch function whenever searchKeyword changes
-        if (searchKeyword !== "") {
-            handleSearch(searchKeyword);
-        }
-    }, [searchKeyword, handleSearch]);
 
     const handleAddButtonClick = () => {
         setShowPopup(true);
@@ -39,6 +32,12 @@ export default function Header({ handleAddContact, sortOrder, setSortOrder, hand
         setSortOrder(newSortOrder);
     };
 
+    const handleSearchChange = (keyword) => {
+        setSearchKeyword(keyword); // Update the searchKeyword state
+        // Pass the search keyword back to the parent component (Phonebooks)
+        handleSearch(keyword);
+    };
+
     return (
         <div className="top-bar">
             <div className="item">
@@ -62,7 +61,7 @@ export default function Header({ handleAddContact, sortOrder, setSortOrder, hand
                         id="search"
                         className="search"
                         value={searchKeyword}
-                        onChange={(e) => setSearchKeyword(e.target.value)}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                     />
                 </form>
             </div>
